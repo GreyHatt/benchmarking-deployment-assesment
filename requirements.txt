@@ -1,6 +1,0 @@
-flask
-pandas
-seaborn
-google-auth
-google-cloud-billing
-requests

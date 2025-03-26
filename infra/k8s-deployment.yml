@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: benchmarking-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: benchmarking
+  template:
+    metadata:
+      labels:
+        app: benchmarking
+    spec:
+      containers:
+      - name: benchmarking
+        image: gcr.io/my-project/benchmarking:latest  # Replace with your Docker image path
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: benchmarking-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: benchmarking
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
