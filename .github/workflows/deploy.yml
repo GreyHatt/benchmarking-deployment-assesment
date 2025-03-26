@@ -21,16 +21,13 @@ jobs:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
       - name: Build Docker Image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest .
+          docker build -f infra/Dockerfile -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest .
       - name: Push Docker Image to GCR
         run: |
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest
       - name: Deploy to GKE
         run: |
-          # Authenticate with GKE
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region us-central1
-
-          # Apply Kubernetes Deployment
           kubectl apply -f infra/k8s-deployment.yaml
       - name: Get GKE External IP
         run: |
