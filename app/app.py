@@ -21,13 +21,12 @@ DEPLOYMENTS = {
 
 benchmark_results = {}
 
-# Function to execute the benchmarking
 def benchmark_service(url, deployment_name):
     try:
         result = subprocess.run(['python3', 'scripts/benchmark_runner.py', url], capture_output=True, text=True)
-        benchmark_results[deployment_name] = result.stdout.strip()
+        benchmark_results[deployment_name] = json.loads(result.stdout.strip())  # Parsing JSON output
     except Exception as e:
-        benchmark_results[deployment_name] = f"Error: {e}"
+        benchmark_results[deployment_name] = {"error": f"Error: {e}"}
 
 @app.route('/')
 def index():
@@ -53,3 +52,4 @@ def result():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080)
+

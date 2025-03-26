@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: benchmarking
-        image: gcr.io/my-project/benchmarking:latest  # Replace with your Docker image path
+        image: $GCR_IMAGE
         ports:
         - containerPort: 8080
 ---
