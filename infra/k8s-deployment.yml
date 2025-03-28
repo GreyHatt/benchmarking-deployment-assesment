@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: benchmarking
-        image: $GCR_IMAGE
+        image: us-docker.pkg.dev/vcc-assignment-452510/benchmarking-deployment-assesment/benchmarking:latest
         ports:
         - containerPort: 8080
 ---

@@ -14,23 +14,38 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      # - name: Authenticate Docker with GCR
+      #   run: gcloud auth configure-docker gcr.io
+
+      - name: Authenticate Docker with Artifact Registry
+        run: gcloud auth configure-docker us-docker.pkg.dev
+
       - name: Build Docker Image
         run: |
-          docker build -f infra/Dockerfile -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest .
-      - name: Push Docker Image to GCR
+          docker build -f infra/Dockerfile -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest .
+
+      - name: Push Docker Image to Artifact Registry
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest
+          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest
+      
+      - name: Retrieve cluster credentials
+        run: |
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone us-central1-c
+      
       - name: Deploy to GKE
         run: |
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region us-central1
-          kubectl apply -f infra/k8s-deployment.yaml
+          gcloud components install gke-gcloud-auth-plugin
+          kubectl apply -f infra/k8s-deployment.yml
       - name: Get GKE External IP
         run: |
           kubectl get svc benchmarking-service
-          # Optionally, expose the service publicly
-          kubectl expose deployment benchmarking-app --type=LoadBalancer --name=benchmarking-service
