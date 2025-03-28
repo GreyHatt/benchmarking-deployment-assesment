@@ -27,9 +27,17 @@ jobs:
       - name: Authenticate Docker with GCR
         run: gcloud auth configure-docker gcr.io
 
+      - name: Authenticate Docker with Artifact Registry
+        run: gcloud auth configure-docker us-docker.pkg.dev
+
       - name: Build Docker Image
         run: |
-          docker build -f infra/Dockerfile -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest .
+          docker build -f infra/Dockerfile -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-repo/benchmarking:latest .
+
+      - name: Push Docker Image to Artifact Registry
+        run: |
+          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-repo/benchmarking:latest
+
       - name: Push Docker Image to GCR
         run: |
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest
