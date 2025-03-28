@@ -4,18 +4,18 @@ import random
 import requests
 import subprocess
 import threading
-import os
+import os,json
 
 app = Flask(__name__)
 
-CLOUD_URL = os.environ(CLOUD_URL)
-GKE_URL = os.environ(GKE_URL)
-VM_URL = os.environ(VM_URL)
+# CLOUD_URL = os.environ.get("CLOUD_URL", "")
+# GKE_URL = os.environ.get("GKE_URL", "")
+VM_URL = os.environ.get("VM_URL", "")
 
 
 DEPLOYMENTS = {
-    "Cloud Run": f"https://{CLOUD_URL}/benchmark",
-    "GKE (Kubernetes)": f"https://{GKE_URL}/benchmark",
+    # "Cloud Run": f"https://{CLOUD_URL}/benchmark",
+    # "GKE (Kubernetes)": f"https://{GKE_URL}/benchmark",
     "Compute Engine (VM)": f"http://{VM_URL}:8080/benchmark"
 }
 
