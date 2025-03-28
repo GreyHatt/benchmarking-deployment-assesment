@@ -38,9 +38,7 @@ jobs:
         run: |
           docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest
 
-      - name: Push Docker Image to GCR
-        run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/benchmarking:latest
+      
       - name: Deploy to GKE
         run: |
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region us-central1
