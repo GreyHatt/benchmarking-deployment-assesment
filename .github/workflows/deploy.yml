@@ -49,5 +49,3 @@ jobs:
       - name: Get GKE External IP
         run: |
           kubectl get svc benchmarking-service
-          # Optionally, expose the service publicly
-          kubectl expose deployment benchmarking-app --type=LoadBalancer --name=benchmarking-service
