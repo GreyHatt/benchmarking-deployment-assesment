@@ -37,10 +37,15 @@ jobs:
       - name: Push Docker Image to Artifact Registry
         run: |
           docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest
-      - name: Deploy to GKE
+      
+      - name: Retrieve cluster credentials
         run: |
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone us-central1-c
-          kubectl apply -f infra/k8s-deployment.yaml
+      
+      - name: Deploy to GKE
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          kubectl apply -f infra/k8s-deployment.yml
       - name: Get GKE External IP
         run: |
           kubectl get svc benchmarking-service
