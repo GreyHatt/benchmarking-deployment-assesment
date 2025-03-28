@@ -32,7 +32,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -f infra/Dockerfile -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest .
+          docker build --no-cache -f infra/Dockerfile -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest .
 
       - name: Push Docker Image to Artifact Registry
         run: |
