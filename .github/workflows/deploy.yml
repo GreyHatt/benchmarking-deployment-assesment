@@ -24,8 +24,8 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-      - name: Authenticate Docker with GCR
-        run: gcloud auth configure-docker gcr.io
+      # - name: Authenticate Docker with GCR
+      #   run: gcloud auth configure-docker gcr.io
 
       - name: Authenticate Docker with Artifact Registry
         run: gcloud auth configure-docker us-docker.pkg.dev
@@ -37,11 +37,9 @@ jobs:
       - name: Push Docker Image to Artifact Registry
         run: |
           docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/benchmarking-deployment-assesment/benchmarking:latest
-
-      
       - name: Deploy to GKE
         run: |
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region us-central1
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone us-central1-c
           kubectl apply -f infra/k8s-deployment.yaml
       - name: Get GKE External IP
         run: |
